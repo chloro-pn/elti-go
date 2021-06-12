@@ -17,6 +17,17 @@ func parseValueType(buf []byte, begin uint32) (ValueType, uint32) {
 	return ValueType(vt), begin + 1
 }
 
+func seriDataType(dt DataType, buf []byte) []byte {
+	v := byte(dt)
+	buf = append(buf, v)
+	return buf
+}
+
+func parseDataType(buf []byte, begin uint32) (DataType, uint32) {
+	dt := buf[begin]
+	return DataType(dt), begin + 1
+}
+
 func parseKey(buf []byte, begin uint32) (string, uint32) {
 	length, new_begin := parseLength(buf, begin)
 	key := string(buf[new_begin : new_begin+length])

@@ -1,5 +1,7 @@
 package elti
 
+import "fmt"
+
 type Positioner struct {
 	buf         []byte
 	begin_index uint32
@@ -75,19 +77,34 @@ func (p *Positioner) GetAsBytes() []byte {
 	if p.value_type != DATA {
 		panic("Positioiner.GetAsBytes error, type mismatch.")
 	}
-	return p.buf[p.begin_index : p.begin_index+p.total_size]
+	dt := DataType(p.buf[p.begin_index])
+	if dt != elti_bytes {
+		panic(fmt.Sprintf("Positioner.GetAsBytes error, type_id = %d", dt))
+	}
+	return p.buf[p.begin_index+1 : p.begin_index+p.total_size]
 }
 
 func (p *Positioner) GetAsString() string {
 	if p.value_type != DATA {
 		panic("Positioiner.GetAsString error, type mismatch.")
 	}
-	return string(p.buf[p.begin_index : p.begin_index+p.total_size])
+	dt := DataType(p.buf[p.begin_index])
+	if dt != elti_string {
+		panic(fmt.Sprintf("Positioner.GetAsBytes error, type_id = %d", dt))
+	}
+	return string(p.buf[p.begin_index+1 : p.begin_index+p.total_size])
 }
 
 func (p *Positioner) GetAsVarint() uint32 {
-	result, new_begin := parseLength(p.buf, 0)
-	if new_begin != uint32(len(p.buf)) {
+	if p.value_type != DATA {
+		panic("Positioiner.GetAsVarint error, type mismatch.")
+	}
+	dt := DataType(p.buf[p.begin_index])
+	if dt != elti_varint {
+		panic(fmt.Sprintf("Positioner.GetAsVarint error, type_id = %d", dt))
+	}
+	result, new_begin := parseLength(p.buf, p.begin_index+1)
+	if new_begin != (p.begin_index + p.total_size) {
 		panic("Positioner.GetAsVarint error.")
 	}
 	return result
@@ -97,10 +114,14 @@ func (p *Positioner) GetAsBool() bool {
 	if p.value_type != DATA {
 		panic("Positioiner.GetAsBool error, type mismatch.")
 	}
+	dt := DataType(p.buf[p.begin_index])
+	if dt != elti_bool {
+		panic(fmt.Sprintf("Positioner.GetAsBytes error, type_id = %d", dt))
+	}
 	var result bool
-	if p.buf[0] == 0x00 {
+	if p.buf[p.begin_index+1] == 0x00 {
 		result = false
-	} else if p.buf[0] == 0x01 {
+	} else if p.buf[p.begin_index+1] == 0x01 {
 		result = true
 	} else {
 		panic("Positioner.GetAsBool error, invalid byte.")
@@ -112,54 +133,86 @@ func (p *Positioner) GetAsUint8() uint8 {
 	if p.value_type != DATA {
 		panic("Positioiner.GetAsUint8 error, type mismatch.")
 	}
-	return bytes_to_uint8(p.buf[p.begin_index : p.begin_index+p.total_size])
+	dt := DataType(p.buf[p.begin_index])
+	if dt != elti_uint8 {
+		panic(fmt.Sprintf("Positioner.GetAsUint8 error, type_id = %d", dt))
+	}
+	return bytes_to_uint8(p.buf[p.begin_index+1 : p.begin_index+p.total_size-1])
 }
 
 func (p *Positioner) GetAsInt8() int8 {
 	if p.value_type != DATA {
 		panic("Positioiner.GetAsInt8 error, type mismatch.")
 	}
-	return bytes_to_int8(p.buf[p.begin_index : p.begin_index+p.total_size])
+	dt := DataType(p.buf[p.begin_index])
+	if dt != elti_int8 {
+		panic(fmt.Sprintf("Positioner.GetAsInt8 error, type_id = %d", dt))
+	}
+	return bytes_to_int8(p.buf[p.begin_index+1 : p.begin_index+p.total_size-1])
 }
 
 func (p *Positioner) GetAsUint16() uint16 {
 	if p.value_type != DATA {
 		panic("Positioiner.GetAsUint16 error, type mismatch.")
 	}
-	return bytes_to_uint16(p.buf[p.begin_index : p.begin_index+p.total_size])
+	dt := DataType(p.buf[p.begin_index])
+	if dt != elti_uint16 {
+		panic(fmt.Sprintf("Positioner.GetAsUint16 error, type_id = %d", dt))
+	}
+	return bytes_to_uint16(p.buf[p.begin_index+1 : p.begin_index+p.total_size-1])
 }
 
 func (p *Positioner) GetAsInt16() int16 {
 	if p.value_type != DATA {
 		panic("Positioiner.GetAsInt16 error, type mismatch.")
 	}
-	return bytes_to_int16(p.buf[p.begin_index : p.begin_index+p.total_size])
+	dt := DataType(p.buf[p.begin_index])
+	if dt != elti_int16 {
+		panic(fmt.Sprintf("Positioner.GetAsInt16 error, type_id = %d", dt))
+	}
+	return bytes_to_int16(p.buf[p.begin_index+1 : p.begin_index+p.total_size-1])
 }
 
 func (p *Positioner) GetAsUint32() uint32 {
 	if p.value_type != DATA {
 		panic("Positioiner.GetAsUint32 error, type mismatch.")
 	}
-	return bytes_to_uint32(p.buf[p.begin_index : p.begin_index+p.total_size])
+	dt := DataType(p.buf[p.begin_index])
+	if dt != elti_uint32 {
+		panic(fmt.Sprintf("Positioner.GetAsUint32 error, type_id = %d", dt))
+	}
+	return bytes_to_uint32(p.buf[p.begin_index+1 : p.begin_index+p.total_size-1])
 }
 
 func (p *Positioner) GetAsInt32() int32 {
 	if p.value_type != DATA {
 		panic("Positioiner.GetAsInt32 error, type mismatch.")
 	}
-	return bytes_to_int32(p.buf[p.begin_index : p.begin_index+p.total_size])
+	dt := DataType(p.buf[p.begin_index])
+	if dt != elti_int32 {
+		panic(fmt.Sprintf("Positioner.GetAsInt32 error, type_id = %d", dt))
+	}
+	return bytes_to_int32(p.buf[p.begin_index+1 : p.begin_index+p.total_size-1])
 }
 
 func (p *Positioner) GetAsUint64() uint64 {
 	if p.value_type != DATA {
 		panic("Positioiner.GetAsUint64 error, type mismatch.")
 	}
-	return bytes_to_uint64(p.buf[p.begin_index : p.begin_index+p.total_size])
+	dt := DataType(p.buf[p.begin_index])
+	if dt != elti_bool {
+		panic(fmt.Sprintf("Positioner.GetAsUint64 error, type_id = %d", dt))
+	}
+	return bytes_to_uint64(p.buf[p.begin_index+1 : p.begin_index+p.total_size-1])
 }
 
 func (p *Positioner) GetAsInt64() int64 {
 	if p.value_type != DATA {
 		panic("Positioiner.GetAsInt64 error, type mismatch.")
 	}
-	return bytes_to_int64(p.buf[p.begin_index : p.begin_index+p.total_size])
+	dt := DataType(p.buf[p.begin_index])
+	if dt != elti_bool {
+		panic(fmt.Sprintf("Positioner.GetAsInt64 error, type_id = %d", dt))
+	}
+	return bytes_to_int64(p.buf[p.begin_index+1 : p.begin_index+p.total_size-1])
 }

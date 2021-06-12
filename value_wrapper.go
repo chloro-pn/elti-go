@@ -59,3 +59,67 @@ func (vw *ValueWrapper) GetAsVarint() uint32 {
 	}
 	return vt.GetAsVarint()
 }
+
+func (vw *ValueWrapper) GetAsInu8() int8 {
+	vt, ok := vw.v.(*Data)
+	if !ok {
+		panic("ValueWrapper.GetAsVarint error, type mismatch")
+	}
+	return vt.GetAsInt8()
+}
+
+func (vw *ValueWrapper) GetAsUinu8() uint8 {
+	vt, ok := vw.v.(*Data)
+	if !ok {
+		panic("ValueWrapper.GetAsVarint error, type mismatch")
+	}
+	return vt.GetAsUint8()
+}
+
+func (vw *ValueWrapper) GetAsInu16() int16 {
+	vt, ok := vw.v.(*Data)
+	if !ok {
+		panic("ValueWrapper.GetAsVarint error, type mismatch")
+	}
+	return vt.GetAsInt16()
+}
+
+func (vw *ValueWrapper) GetAsUinu16() uint16 {
+	vt, ok := vw.v.(*Data)
+	if !ok {
+		panic("ValueWrapper.GetAsVarint error, type mismatch")
+	}
+	return vt.GetAsUint16()
+}
+
+func (vw *ValueWrapper) GetAsInu32() int32 {
+	vt, ok := vw.v.(*Data)
+	if !ok {
+		panic("ValueWrapper.GetAsVarint error, type mismatch")
+	}
+	return vt.GetAsInt32()
+}
+
+func (vw *ValueWrapper) GetAsUinu32() uint32 {
+	vt, ok := vw.v.(*Data)
+	if !ok {
+		panic("ValueWrapper.GetAsVarint error, type mismatch")
+	}
+	return vt.GetAsUint32()
+}
+
+func (vw *ValueWrapper) GetAsInu64() int64 {
+	vt, ok := vw.v.(*Data)
+	if !ok {
+		panic("ValueWrapper.GetAsVarint error, type mismatch")
+	}
+	return vt.GetAsInt64()
+}
+
+func (vw *ValueWrapper) GetAsUinu64() uint64 {
+	vt, ok := vw.v.(*Data)
+	if !ok {
+		panic("ValueWrapper.GetAsVarint error, type mismatch")
+	}
+	return vt.GetAsUint64()
+}
