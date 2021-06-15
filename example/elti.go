@@ -1,7 +1,10 @@
 package main
 
-import "github.com/chloro-pn/elti-go"
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/chloro-pn/elti-go"
+)
 
 func main() {
 	v := elti.NewDataFromString("hello")
@@ -12,7 +15,7 @@ func main() {
 	el := elti.NewElti(arr)
 	buf := el.SeriToBytes()
 
-	el2 := elti.ParseToElti(buf)
+	el2 := elti.ParseToElti(buf, elti.ParseRefOff)
 	root := el2.GetRoot()
 	fmt.Printf("%s, %s!", root.At(0).GetAsString(), root.At(1).GetAsString())
 }

@@ -36,6 +36,14 @@ func (vw *ValueWrapper) GetValueType() ValueType {
 	return vw.v.getValueType()
 }
 
+func (vw *ValueWrapper) GetRef() []byte {
+	vt, ok := vw.v.(*DataRef)
+	if !ok {
+		panic("ValueWrapper.GetRef error, type mismatch")
+	}
+	return vt.GetRef()
+}
+
 func (vw *ValueWrapper) GetAsBytes() []byte {
 	vt, ok := vw.v.(*Data)
 	if !ok {

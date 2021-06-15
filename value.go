@@ -1,8 +1,10 @@
 package elti
 
+import "fmt"
+
 type Value interface {
 	seriValue(buf []byte) []byte
-	parseValue(buf []byte, begin uint32) uint32
+	parseValue(buf []byte, begin uint32, pt ParseType) uint32
 	getValueType() ValueType
 }
 
@@ -14,6 +16,9 @@ func seriValueType(vt ValueType, buf []byte) []byte {
 
 func parseValueType(buf []byte, begin uint32) (ValueType, uint32) {
 	vt := buf[begin]
+	if parseValueTypeCheck(ValueType(vt)) == false {
+		panic(fmt.Sprintf("parseValueType error, invalid vt : %d", vt))
+	}
 	return ValueType(vt), begin + 1
 }
 
@@ -35,8 +40,13 @@ func parseKey(buf []byte, begin uint32) (string, uint32) {
 	return key, new_begin
 }
 
-func valueFactory(vt ValueType) Value {
+func valueFactory(vt ValueType, pt ParseType) Value {
 	if vt == DATA {
+		if pt == ParseRefOff {
+			return NewData(nil)
+		} else {
+			return NewDataRef(nil, 0, 0)
+		}
 		return NewData(nil)
 	} else if vt == ARRAY {
 		return NewArray()

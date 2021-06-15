@@ -1,7 +1,7 @@
 package elti
 
 import (
-	"reflect"
+	"bytes"
 	"testing"
 )
 
@@ -15,11 +15,11 @@ func TestElement(t *testing.T) {
 		value: nil,
 	}
 
-	new_begin := ele2.parse(buf, 0)
+	new_begin := ele2.parse(buf, 0, ParseRefOff)
 	if new_begin != uint32(len(buf)) {
 		t.Error("element parse error!")
 	}
-	if ele2.key != ele.key || reflect.DeepEqual(ele.value, ele2.value) == false {
+	if ele2.key != ele.key || bytes.Equal(ele.value.(*Data).v, ele2.value.(*Data).v) == false {
 		t.Error("element parse error!")
 	}
 }

@@ -23,11 +23,11 @@ func (e *Element) seri(buf []byte) []byte {
 	return buf
 }
 
-func (e *Element) parse(buf []byte, begin uint32) uint32 {
+func (e *Element) parse(buf []byte, begin uint32, pt ParseType) uint32 {
 	var new_begin uint32
 	e.key, new_begin = parseKey(buf, begin)
 	vt, new_begin := parseValueType(buf, new_begin)
-	e.value = valueFactory(vt)
-	new_begin = e.value.parseValue(buf, new_begin)
+	e.value = valueFactory(vt, pt)
+	new_begin = e.value.parseValue(buf, new_begin, pt)
 	return new_begin
 }

@@ -106,7 +106,10 @@ func (d *Data) seriValue(buf []byte) []byte {
 	return buf
 }
 
-func (d *Data) parseValue(buf []byte, begin uint32) uint32 {
+func (d *Data) parseValue(buf []byte, begin uint32, pt ParseType) uint32 {
+	if pt != ParseRefOff {
+		panic("Data.parseValue error. pt error.")
+	}
 	total_length, new_begin := parseLength(buf, begin)
 	if total_length == 0 {
 		panic("Data.parseValue error, total_length == 0.")

@@ -26,14 +26,14 @@ func (m *Map) seriValue(buf []byte) []byte {
 	return buf
 }
 
-func (m *Map) parseValue(buf []byte, begin uint32) uint32 {
+func (m *Map) parseValue(buf []byte, begin uint32, pt ParseType) uint32 {
 	m.kvs = make(map[string]Value, 0)
 	_, new_begin := parseLength(buf, begin)
 	count, new_begin := parseLength(buf, new_begin)
 	var i uint32
 	for i = 0; i < count; i++ {
 		ele := NewElement("", nil)
-		new_begin = ele.parse(buf, new_begin)
+		new_begin = ele.parse(buf, new_begin, pt)
 		_, ok := m.kvs[ele.key]
 		if ok {
 			panic(fmt.Sprintf("Map.parseValue error, duplicate key %s", ele.key))

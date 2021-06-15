@@ -1,8 +1,11 @@
 package elti
 
-import "testing"
+import (
+	"bytes"
+	"testing"
+)
 
-func TestElti(t *testing.T) {
+func TestDataRef(t *testing.T) {
 	m := NewMap()
 	m.Set("name", NewDataFromString("bob"))
 	m.Set("age", NewDataFromUint8(24))
@@ -14,17 +17,16 @@ func TestElti(t *testing.T) {
 	e := NewElti(m)
 	buf := e.SeriToBytes()
 
-	e2 := ParseToElti(buf, ParseRefOff)
+	e2 := ParseToElti(buf, ParseRefOn)
 	if e2.GetRoot().GetValueType() != MAP {
 		t.Error("elti test error.")
 	}
-	if e2.GetRoot().Attr("source").At(0).GetAsString() != "math" {
+	if !bytes.Equal(e2.GetRoot().Attr("source").At(0).GetRef(), []byte("math")) {
 		t.Error("elti test error.")
 	}
-	if e2.GetRoot().Attr("varint-test").GetAsVarint() != 15 {
+	if e2.GetRoot().Attr("source").At(0).GetValueType() != DATAREF {
 		t.Error("elti test error.")
 	}
-
 	p := ParseToPositioner(buf)
 	if p.Attr("name").GetAsString() != "bob" {
 		t.Error("elti test error.")

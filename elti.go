@@ -22,9 +22,9 @@ func (e *Elti) GetRoot() *ValueWrapper {
 	return NewValueWrapper(e.root.value)
 }
 
-func ParseToElti(buf []byte) *Elti {
+func ParseToElti(buf []byte, pt ParseType) *Elti {
 	ele := NewElement("", nil)
-	total_size := ele.parse(buf, 0)
+	total_size := ele.parse(buf, 0, pt)
 	if total_size != uint32(len(buf)) {
 		panic(fmt.Sprintf("ParseToElti error, len(buf) == %d, total_size == %d.", len(buf), total_size))
 	}

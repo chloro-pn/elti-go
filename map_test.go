@@ -12,7 +12,7 @@ func TestMap(t *testing.T) {
 	buf = m.seriValue(buf)
 
 	m2 := NewMap()
-	new_begin := m2.parseValue(buf, 0)
+	new_begin := m2.parseValue(buf, 0, ParseRefOff)
 	if new_begin != uint32(len(buf)) {
 		t.Error("test map error.")
 	}

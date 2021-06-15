@@ -24,5 +24,20 @@ const (
 	MAP ValueType = iota
 	ARRAY
 	DATA
+	DATAREF
 	INVALID
+)
+
+func parseValueTypeCheck(vt ValueType) bool {
+	if vt == MAP || vt == ARRAY || vt == DATA {
+		return true
+	}
+	return false
+}
+
+type ParseType uint8
+
+const (
+	ParseRefOn ParseType = iota
+	ParseRefOff
 )

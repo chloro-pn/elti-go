@@ -1,8 +1,8 @@
 package elti
 
 import (
+	"bytes"
 	"fmt"
-	"reflect"
 	"testing"
 )
 
@@ -15,7 +15,7 @@ func TestArray(t *testing.T) {
 	buf = arr.seriValue(buf)
 
 	arr2 := NewArray()
-	total_size := arr2.parseValue(buf, 0)
+	total_size := arr2.parseValue(buf, 0, ParseRefOff)
 	fmt.Printf("%d %d", total_size, len(buf))
 	if total_size != uint32(len(buf)) {
 		t.Error("test array error.")
@@ -34,7 +34,7 @@ func TestArray(t *testing.T) {
 	if n != 2 {
 		t.Error("test array error.")
 	}
-	if !reflect.DeepEqual([]byte{0x00, 0x01, 0x02}, arr2.At(1).(*Data).BytesRef()) {
+	if !bytes.Equal([]byte{0x00, 0x01, 0x02}, arr2.At(1).(*Data).BytesRef()) {
 		t.Error("test array error.")
 	}
 	if string(arr2.At(2).(*Data).BytesRef()) != "hello" {
@@ -44,7 +44,7 @@ func TestArray(t *testing.T) {
 	if arr2.Size() != 2 {
 		t.Error("test array error.")
 	}
-	if !reflect.DeepEqual([]byte{0x00, 0x01, 0x02}, arr2.At(0).(*Data).BytesRef()) {
+	if !bytes.Equal([]byte{0x00, 0x01, 0x02}, arr2.At(0).(*Data).BytesRef()) {
 		t.Error("test array error.")
 	}
 }

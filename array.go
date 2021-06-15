@@ -41,7 +41,7 @@ func (d *Array) seriValue(buf []byte) []byte {
 	return buf
 }
 
-func (d *Array) parseValue(buf []byte, begin uint32) uint32 {
+func (d *Array) parseValue(buf []byte, begin uint32, pt ParseType) uint32 {
 	d.vs = make([]Value, 0)
 	_, new_begin := parseLength(buf, begin)
 	count, new_begin := parseLength(buf, new_begin)
@@ -49,8 +49,8 @@ func (d *Array) parseValue(buf []byte, begin uint32) uint32 {
 	for i = 0; i < count; i++ {
 		var vt ValueType
 		vt, new_begin = parseValueType(buf, new_begin)
-		v := valueFactory(vt)
-		new_begin = v.parseValue(buf, new_begin)
+		v := valueFactory(vt, pt)
+		new_begin = v.parseValue(buf, new_begin, pt)
 		d.vs = append(d.vs, v)
 	}
 	return new_begin
