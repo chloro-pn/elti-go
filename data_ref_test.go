@@ -21,7 +21,8 @@ func TestDataRef(t *testing.T) {
 	if e2.GetRoot().GetValueType() != MAP {
 		t.Error("elti test error.")
 	}
-	if !bytes.Equal(e2.GetRoot().Attr("source").At(0).GetRef(), []byte("math")) {
+	var ref = e2.GetRoot().Attr("source").At(0).GetRef()
+	if !bytes.Equal(ref, []byte("math")) {
 		t.Error("elti test error.")
 	}
 	if e2.GetRoot().Attr("source").At(0).GetValueType() != DATAREF {

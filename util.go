@@ -7,7 +7,7 @@ func seriLength(length uint32, ptr []byte) []byte {
 	var buf [maxVarintBytes]byte
 	var n uint32
 	for n = 0; length > 127; n++ {
-		buf[n] = 0x80 | uint8(length&0x7F)
+		buf[n] = 0x80 | uint8(length)&0x7F
 		length >>= 7
 	}
 	buf[n] = uint8(length)
@@ -25,7 +25,7 @@ func parseLength(ptr []byte, begin uint32) (uint32, uint32) {
 			panic("parseLength error, the num is too large to represent in a 32-bit value.")
 		}
 		b := ptr[begin+n]
-		result |= (uint32)(b&0x7F) << (7 * n)
+		result |= uint32(b&0x7F) << (7 * n)
 		n++
 		if (b & 0x80) == 0 {
 			break

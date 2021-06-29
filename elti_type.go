@@ -41,3 +41,10 @@ const (
 	ParseRefOn ParseType = iota
 	ParseRefOff
 )
+
+type BytesEncodeType uint8
+
+const (
+	Base64 BytesEncodeType = iota
+	HexStyle
+)

@@ -1,11 +1,14 @@
 package elti
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Value interface {
 	seriValue(buf []byte) []byte
 	parseValue(buf []byte, begin uint32, pt ParseType) uint32
 	getValueType() ValueType
+	ToJson(bt BytesEncodeType) []byte
 }
 
 func seriValueType(vt ValueType, buf []byte) []byte {
@@ -47,7 +50,6 @@ func valueFactory(vt ValueType, pt ParseType) Value {
 		} else {
 			return NewDataRef(nil, 0, 0)
 		}
-		return NewData(nil)
 	} else if vt == ARRAY {
 		return NewArray()
 	} else if vt == MAP {

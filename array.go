@@ -59,3 +59,17 @@ func (d *Array) parseValue(buf []byte, begin uint32, pt ParseType) uint32 {
 func (d *Array) getValueType() ValueType {
 	return ARRAY
 }
+
+func (d *Array) ToJson(bt BytesEncodeType) []byte {
+	var result []byte
+	result = append(result, '[')
+	for _, each := range d.vs {
+		result = append(result, each.ToJson(bt)...)
+		result = append(result, ',')
+	}
+	if result[len(result)-1] == ',' {
+		result = result[:len(result)-1]
+	}
+	result = append(result, ']')
+	return result
+}

@@ -47,6 +47,22 @@ func (m *Map) getValueType() ValueType {
 	return MAP
 }
 
+func (m *Map) ToJson(bt BytesEncodeType) []byte {
+	var result []byte
+	result = append(result, '{')
+	for key, each := range m.kvs {
+		result = append(result, []byte(key)...)
+		result = append(result, ':')
+		result = append(result, each.ToJson(bt)...)
+		result = append(result, ',')
+	}
+	if result[len(result)-1] == ',' {
+		result = result[:len(result)-1]
+	}
+	result = append(result, '}')
+	return result
+}
+
 func (m *Map) Set(key string, v Value) {
 	m.Erase(key)
 	m.kvs[key] = v

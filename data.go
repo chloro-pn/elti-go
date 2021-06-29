@@ -1,6 +1,10 @@
 package elti
 
-import "fmt"
+import (
+	"bytes"
+	"encoding/base64"
+	"fmt"
+)
 
 type Data struct {
 	v []byte
@@ -122,6 +126,82 @@ func (d *Data) parseValue(buf []byte, begin uint32, pt ParseType) uint32 {
 
 func (d *Data) getValueType() ValueType {
 	return DATA
+}
+
+func (d *Data) ToJson(bt BytesEncodeType) []byte {
+	switch bt {
+	case Base64:
+		{
+			switch d.t {
+			case elti_bool:
+				{
+					if d.v[0] == 0x01 {
+						return []byte("true")
+					} else if d.v[0] == 0x00 {
+						return []byte("false")
+					} else {
+						panic(fmt.Sprintf("invalid elti bool value : %d", bytes_to_int8(d.v)))
+					}
+				}
+			case elti_int8:
+				{
+					return []byte(fmt.Sprintf("%d", bytes_to_int8(d.v)))
+				}
+			case elti_uint8:
+				{
+					return []byte(fmt.Sprintf("%d", bytes_to_uint8(d.v)))
+				}
+			case elti_int16:
+				{
+					return []byte(fmt.Sprintf("%d", bytes_to_int16(d.v)))
+				}
+			case elti_uint16:
+				{
+					return []byte(fmt.Sprintf("%d", bytes_to_uint16(d.v)))
+				}
+			case elti_int32:
+				{
+					return []byte(fmt.Sprintf("%d", bytes_to_int32(d.v)))
+				}
+			case elti_uint32:
+				{
+					return []byte(fmt.Sprintf("%d", bytes_to_uint32(d.v)))
+				}
+			case elti_int64:
+				{
+					return []byte(fmt.Sprintf("%d", bytes_to_int64(d.v)))
+				}
+			case elti_uint64:
+				{
+					return []byte(fmt.Sprintf("%d", bytes_to_uint64(d.v)))
+				}
+			case elti_string:
+				{
+					return d.v
+				}
+			case elti_varint:
+				{
+					result, _ := parseLength(d.v, 0)
+					return []byte(fmt.Sprintf("%d", result))
+				}
+			case elti_bytes, elti_custom:
+				{
+					var buff bytes.Buffer
+					encoder := base64.NewEncoder(base64.StdEncoding, &buff)
+					encoder.Write(d.v)
+					encoder.Close()
+					return buff.Bytes()
+				}
+			default:
+				panic(fmt.Sprintf("invalid elti_type : %d", d.t))
+			}
+		}
+	case HexStyle:
+		panic("this feature is not completed in the current version.")
+	default:
+		panic(fmt.Sprintf("invalid encode type : %d", bt))
+	}
+	return nil
 }
 
 func (d *Data) BytesRef() []byte {

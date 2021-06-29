@@ -1,5 +1,9 @@
 package elti
 
+import (
+	"fmt"
+)
+
 type DataRef struct {
 	buf    []byte
 	begin  uint32
@@ -32,6 +36,20 @@ func (dr *DataRef) parseValue(buf []byte, begin uint32, pt ParseType) uint32 {
 	dr.length -= 1
 	dr.t, dr.begin = parseDataType(buf, new_begin)
 	return dr.begin + dr.length
+}
+
+// todo.
+func (dr *DataRef) ToJson(bt BytesEncodeType) []byte {
+	switch bt {
+	case Base64:
+		{
+			panic("this feature is not completed in the current version.")
+		}
+	case HexStyle:
+		panic("this feature is not completed in the current version.")
+	default:
+		panic(fmt.Sprintf("invalid encode type : %d", bt))
+	}
 }
 
 func (dr *DataRef) GetRef() []byte {

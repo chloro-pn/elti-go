@@ -1,6 +1,8 @@
 package elti
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestElti(t *testing.T) {
 	m := NewMap()
@@ -13,7 +15,6 @@ func TestElti(t *testing.T) {
 	m.Set("source", arr)
 	e := NewElti(m)
 	buf := e.SeriToBytes()
-
 	e2 := ParseToElti(buf, ParseRefOff)
 	if e2.GetRoot().GetValueType() != MAP {
 		t.Error("elti test error.")

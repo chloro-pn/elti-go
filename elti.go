@@ -18,6 +18,10 @@ func (e *Elti) SeriToBytes() []byte {
 	return buf
 }
 
+func (e *Elti) ToJson() []byte {
+	return e.root.value.ToJson(Base64)
+}
+
 func (e *Elti) GetRoot() *ValueWrapper {
 	return NewValueWrapper(e.root.value)
 }
